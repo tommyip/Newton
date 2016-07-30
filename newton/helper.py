@@ -3,9 +3,14 @@ Helper functions
 ====================
 1. Get decimal points
 """
+import mpmath as mp
+
+mp.mp.prec = 32
+mp.mp.pretty = True
+
 
 def decimal_points(x):
-    x = round(x, 10)
+    x = mp.mpmathify(x)
     split = str(x).strip("0").split('.')
     try:
         floating_points = len(split[1])
@@ -13,5 +18,16 @@ def decimal_points(x):
     except IndexError:
         return 0
 
+
 def mean(a, b):
-    return (a + b) / 2
+    return mp.fdiv(mp.fadd(a, b), mp.mpf(2))
+
+
+def near(num, a, b):
+    if abs(a - num) < abs(b - num):
+        return a
+    return b
+
+
+def mpfiy(array):
+    return list(map(lambda x: mp.mpf(x), array))

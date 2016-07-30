@@ -16,21 +16,40 @@ Precision - Integer (number of decimal points)
 2x^2 + 4x + 3 = 0
 """
 import sys
+from mpmath import mpf, mp, mpmathify, fmul, fadd, power
 sys.path.append('/home/tommy/Documents/project/')
 from newton import helper
+
+mp.prec = 32
+mp.pretty = True
 
 
 def interval_bisection(equation, lower, upper, precision=5):
     """
-    Calcuate the root of the equation using 
+    Calculate the root of the equation using
     `Interval Bisection` method.
     """
-    ans = 0
+
+    equation = helper.mpfiy(equation)
+    lower, upper = mpf(lower), mpf(upper)
     x = helper.mean(lower, upper)
+    index_length = len(equation)
+
+    # previous_alpha = lower
+    # current_alpha =
+
     while helper.decimal_points(x) <= precision:
-        for index in range(len(equation)):
-            power = len(equation) - index - 1
-            ans += equation[index] * (x * power)
+        ans = mpf(0)
+        for index in range(index_length):
+            index_power = index_length - index - 1
+            ans = fadd(ans, fmul(equation[index], power(x, index_power)))
+        if ans > 0:
+            upper = x
+        else:
+            lower = x
+        x = helper.mean(lower, upper)
+
+    return mpmathify(helper.near(ans, lower, upper), precision)
 
 
 def general_iteration_method():
@@ -39,3 +58,6 @@ def general_iteration_method():
 
 def newton_raphson_method():
     pass
+
+if __name__ == '__main__':
+    interval_bisection([1, -3, 4], 2, 3, 2)
