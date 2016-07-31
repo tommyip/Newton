@@ -31,3 +31,14 @@ def near(num, a, b):
 
 def mpfiy(array):
     return list(map(lambda x: mp.mpf(x), array))
+
+
+def find_precision(num):
+    precision = 0
+    decimal_part = mp.nstr(num).split('.')[1]
+    for i in range(len(decimal_part)):
+        if decimal_part[i] == '0':
+            precision += 1
+        else:
+            break
+    return precision

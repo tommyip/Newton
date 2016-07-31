@@ -32,3 +32,9 @@ def test_near():
 def test_mpfiy():
     assert helper.mpfiy(range(5)) == [mpf('0.0'), mpf('1.0'),
                                       mpf('2.0'), mpf('3.0'), mpf('4.0')]
+
+
+def test_find_precision():
+    assert helper.find_precision(mpf('0.0001')) == 3
+    assert helper.find_precision(mpf('0.0056789')) == 2
+    # assert helper.find_precision(mpf('0.00004325')) == 4

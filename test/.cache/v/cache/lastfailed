@@ -1,1 +1,3 @@
-{}
+{
+  "test_numerical_method.py::test_interval_bisection": true
+}
