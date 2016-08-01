@@ -6,7 +6,7 @@ Numerical Solutions of Equations
 3. Newton-Raphson method
 
 Each methods would accept an equation, an initial value
-and a precision.
+a precision.
 
 Format
 -----------------------------------------------
@@ -39,30 +39,36 @@ def interval_bisection(equation, lower, upper, precision=5):
     counter = 0
     equation = helper.mpfiy(equation)
     lower, upper = mpf(lower), mpf(upper)
-    x = helper.mean(lower, upper)
     index_length = len(equation)
+    x = helper.mean(lower, upper)
 
-    previous_alpha = current_alpha = None
+    previous_alpha = alpha = None
     delta = fsub(upper, lower)
 
     while delta > power(10, fneg(precision)) or previous_alpha is None:
         ans = mpf(0)
-        for index in range(index_length):
-            index_power = index_length - index - 1
-            ans = fadd(ans, fmul(equation[index], power(x, index_power)))
+
+        for i in range(index_length):
+            index_power = index_length - i - 1
+            ans = fadd(ans, fmul(equation[i], power(x, index_power)))
+
         if ans > mpf(0):
             upper = x
         else:
             lower = x
-        x = helper.mean(lower, upper)  # !
-        previous_alpha, current_alpha = current_alpha, x
+
+        x = helper.mean(lower, upper)
+        previous_alpha, alpha = alpha, x
+
         if previous_alpha is None:
             continue
-        delta = abs(fsub(current_alpha, previous_alpha))
-        print(current_alpha)
-        counter += 1
+        elif previous_alpha == alpha:
+            break
+        else:
+            delta = abs(fsub(alpha, previous_alpha))
+            counter += 1
 
-    return helper.near(current_alpha, lower, upper), counter
+    return str(helper.near(alpha, lower, upper)), counter
 
 
 def general_iteration_method():
@@ -73,4 +79,4 @@ def newton_raphson_method():
     pass
 
 if __name__ == '__main__':
-    print(interval_bisection([1, 0, -3, -4], 2, 3, 10))
+    print(interval_bisection([1, 0, -3, -4], 2, 3, 9))
