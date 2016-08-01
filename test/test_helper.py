@@ -23,3 +23,13 @@ def test_near():
 def test_mpfiy():
     assert helper.mpfiy(range(5)) == [mpf('0.0'), mpf('1.0'),
                                       mpf('2.0'), mpf('3.0'), mpf('4.0')]
+
+
+def test_number2ordinal():
+    assert helper.number2ordinal(1) == '1st'
+    assert helper.number2ordinal(2) == '2nd'
+    assert helper.number2ordinal(3) == '3rd'
+    assert helper.number2ordinal(4) == '4th'
+    assert helper.number2ordinal(10652) == '10652nd'
+
+    

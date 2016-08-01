@@ -31,7 +31,7 @@ mp.prec = 32
 mp.pretty = True
 
 
-def interval_bisection(equation, lower, upper, precision=5):
+def interval_bisection(equation, lower, upper, precision=10):
     """
     Calculate the root of the equation using
     `Interval Bisection` method.
