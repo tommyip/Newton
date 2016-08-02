@@ -8,6 +8,7 @@ Helper functions
 4. find
 """
 import mpmath as mp
+import numpy as np
 
 mp.mp.prec = 32
 mp.mp.pretty = True
@@ -57,3 +58,19 @@ def input2int(question='', valid_input=[]):
             print('ERROR: Please enter a valid number.')
 
     return output
+
+
+def func(eq, x):
+    """
+    Produce a result using the equation
+
+    :param eq: An array of the coefficient
+    :param x: X value
+    :return: The Y value
+    """
+    ans, x = mp.mpf(0), mp.mpf(str(x))
+    index_length = len(eq)
+    for i in range(index_length):
+        order = index_length - i - 1
+        ans = mp.fadd(ans, mp.fmul(eq[i], mp.power(x, order)))
+    return mp.nstr(ans)
