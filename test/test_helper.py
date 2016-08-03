@@ -42,3 +42,8 @@ def test_func():
             == list(map(lambda x: str(x), [-14.0, -14.6698, -15.0368, -15.0338, -14.5888, -13.625,
                 -12.0608, -9.8098, -6.7808, -2.8778]))
 
+
+def test_differentiate():
+    assert hp.differentiate([3, 5, -1, 8]) == [9, 10, -1]
+    assert hp.differentiate([9, 10, -1]) == [18, 10]
+    assert hp.differentiate([6, 0, 0, 1, 8, 3, 1, 0]) == [42, 0, 0, 4, 24, 6, 1]

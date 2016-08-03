@@ -61,16 +61,24 @@ def input2int(question='', valid_input=[]):
 
 
 def func(eq, x):
-    """
-    Produce a result using the equation
-
-    :param eq: An array of the coefficient
-    :param x: X value
-    :return: The Y value
-    """
+    """ Calculate the answer to f(x) """
     ans, x = mp.mpf(0), mp.mpf(str(x))
     index_length = len(eq)
     for i in range(index_length):
         order = index_length - i - 1
         ans = mp.fadd(ans, mp.fmul(eq[i], mp.power(x, order)))
     return mp.nstr(ans)
+
+
+def differentiate(eq):
+    """
+    Eq: 3x^3 + 5x^2 - x + 8
+    Return: 9x^2 + 10x - 1
+    """
+    out = []
+    index = len(eq) - 1
+    for i in range(index):
+        out.append(eq[i] * index)
+        index -= 1
+
+    return out
