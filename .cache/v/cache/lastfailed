@@ -1,6 +1,0 @@
-{
-  "algorithms/numerical_method.py": true,
-  "numerical_solutions_of_equation.py": true,
-  "test/test_helper.py": true,
-  "test/test_numerical_method.py": true
-}
