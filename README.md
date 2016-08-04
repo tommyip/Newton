@@ -16,4 +16,4 @@ This repository contains 1.) Differentiation and intergration algorithms written
 
 ## Notes
 
-1. Testing are done by Pytest and doctest. Just run `py.test` at the top directory to execute all test.
+1. Testing are done by Pytest and doctest. Just run `py.test` at the top directory to execute all test, you might need to run `export PYTHONPATH=.` for pytest to find all submodules.
