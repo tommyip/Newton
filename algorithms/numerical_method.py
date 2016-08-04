@@ -2,15 +2,14 @@
 Numerical Solutions of Equations
 ================================
 1. Interval Bisection
-2. General iteration method
-3. Newton-Raphson method
+2. Newton-Raphson method
 
-Each methods would accept an equation, an initial value
+Each functions accept an equation, an initial value
 a precision.
 
 Format
 -----------------------------------------------
-Equation - Array (sort in index order DESC.)
+Equation - List (sort in index order DESC.)
 Initial value - Integer
 Precision - Integer (number of decimal points)
 
@@ -22,25 +21,30 @@ Initial value - 5
 Precision - 10
 """
 
-import sys
-from mpmath import mpf, mp, fmul, fadd, fsub, power, fneg, fdiv
-sys.path.append('/home/tommy/Documents/project/')
-from newton import helper as hp
+from mpmath import mpf, fmul, fadd, fsub, power, fneg, fdiv
+from .helper import *
 
 mp.prec = 32
 mp.pretty = True
 
 
 def interval_bisection(equation, lower, upper, precision=10):
-    """
-    Calculate the root of the equation using
+    """ Calculate the root of the equation using
     `Interval Bisection` method.
+
+    Examples:
+    >>> interval_bisection([1, 0, -3, -4], 2, 3, 10)[0]
+    '2.19582335'
+    >>> interval_bisection([1, 0, 1, -6], 1, 2, 10)[0]
+    '1.63436529'
+    >>> interval_bisection([1, 0, 3, -12], 1, 2, 10)[0]
+    '1.85888907'
     """
     counter = 0
-    equation = hp.mpfiy(equation)
+    equation = mpfiy(equation)
     lower, upper = mpf(lower), mpf(upper)
     index_length = len(equation)
-    x = hp.mean(lower, upper)
+    x = mean(lower, upper)
 
     previous_alpha = alpha = None
     delta = fsub(upper, lower)
@@ -57,7 +61,7 @@ def interval_bisection(equation, lower, upper, precision=10):
         else:
             lower = x
 
-        x = hp.mean(lower, upper)
+        x = mean(lower, upper)
         previous_alpha, alpha = alpha, x
 
         if previous_alpha is None:
@@ -68,38 +72,23 @@ def interval_bisection(equation, lower, upper, precision=10):
             delta = abs(fsub(alpha, previous_alpha))
             counter += 1
 
-    return str(hp.near(alpha, lower, upper)), counter
-
-
-def general_iteration_method(equation, approx, precision=8):
-    counter = 0
-    equation = hp.mpfiy(equation)
-    approx = mpf(approx)
-
-    previous_approx = None
-    delta = 100
-    delta_required = power(10, fneg(precision))
-
-    while delta > delta_required or previous_approx is None:
-        previous_approx, approx = approx, hp.func(equation, approx)
-
-        if previous_approx is None:
-            continue
-        elif previous_approx == approx:
-            break
-        else:
-            delta = abs(fsub(approx, previous_approx))
-
-    return str(approx), counter
+    return str(near(alpha, lower, upper)), counter
 
 
 def newton_raphson_method(equation, approx, precision=8):
-    """
-    Calculate the root of the equation using
+    """ Calculate the root of the equation using
     `Newton Raphson` method.
+
+    Examples:
+    >>> newton_raphson_method([1, 0, -3, -4], 2, 8)[0]
+    '2.19582335'
+    >>> newton_raphson_method([1, 0, 1, -6], 1, 8)[0]
+    '1.63436529'
+    >>> newton_raphson_method([1, 0, 3, -12], 1, 8)[0]
+    '1.85888907'
     """
     counter = 0
-    equation = hp.mpfiy(equation)
+    equation = mpfiy(equation)
     approx = mpf(approx)
 
     previous_approx = None
@@ -108,8 +97,8 @@ def newton_raphson_method(equation, approx, precision=8):
 
     while delta > delta_required or previous_approx is None:
         better_approx = fsub(approx, fdiv(
-            hp.func(equation, approx),
-            hp.func(hp.differentiate(equation), approx)
+            func(equation, approx),
+            func(differentiate(equation), approx)
         ))
 
         previous_approx, approx = approx, better_approx
@@ -123,8 +112,3 @@ def newton_raphson_method(equation, approx, precision=8):
             counter += 1
 
     return str(approx), counter
-
-if __name__ == '__main__':
-    # print(interval_bisection([1, 0, -3, -4], 2, 3, 9))
-    print(general_iteration_method([2, 0, -2], 2, 7))
-    # print(newton_raphson_method([1, 0, -3, -4], 2, 8))

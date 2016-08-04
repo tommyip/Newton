@@ -13,3 +13,7 @@ This repository contains 1.) Differentiation and intergration algorithms written
 3. Commit your changes: `git commit -am 'New features'`
 4. Push to branch: `git push origin new-features`
 5. Submit a pull request
+
+## Notes
+
+1. Testing are done by Pytest and doctest. Just run `py.test` at the top directory to execute all test.

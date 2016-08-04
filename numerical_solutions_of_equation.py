@@ -9,8 +9,8 @@ Numerical Solutions of Equations
 import numpy as np
 from decimal import Decimal
 from matplotlib import style, pyplot as plt
-from newton.numerical_method import interval_bisection, general_iteration_method, newton_raphson_method
-from newton import helper as hp
+import algorithms.numerical_method as nm
+from algorithms import helper as hp
 
 style.use('ggplot')
 WELCOME_MESSAGE = __doc__
@@ -35,15 +35,15 @@ def main():
             lower_init = hp.input2int("What is the lower initial value of the root: ")
             upper_init = hp.input2int("What is the upper initial value of the root: ")
 
-            ans, count = interval_bisection(equation, lower_init, upper_init, precision)
+            ans, count = nm.interval_bisection(equation, lower_init, upper_init, precision)
 
         elif algorithm == 2:
             init = hp.input2int("What is the initial value of the root: ")
-            ans, count = general_iteration_method(equation, init, precision)
+            #ans, count = general_iteration_method(equation, init, precision)
 
         elif algorithm == 3:
             init = hp.input2int("What is the initial value of the root: ")
-            ans, count = newton_raphson_method(equation, init, precision)
+            ans, count = nm.newton_raphson_method(equation, init, precision)
 
         # Display answer
         print("The root of the equation {equation} is {answer}.\nIt took {iteration} iteration to calculate the answer.".format(
