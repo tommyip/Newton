@@ -1,8 +1,11 @@
+import re
 import mpmath as mp
 import numpy as np
 
 mp.mp.prec = 32
 mp.mp.pretty = True
+
+polynomial_pattern = re.compile('([+|-]?\d*)(x)?(\^\d+)?')
 
 
 def mean(a, b):
@@ -124,3 +127,46 @@ def differentiate(eq):
         index -= 1
 
     return out
+
+
+def lexer(eq):
+    """ Returns a Python list containing the coefficient
+    of an equation.
+
+    Example:
+    >>> lexer('3x^4 + 5x^3 - x^2 + 8x + 2')
+    [3, 5, -1, 8, 2]
+    >>> lexer('2x^3 - 5')
+    [2, 0, 0, -5]
+    >>> lexer('15x^10')
+    [15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    """
+
+    matches = re.findall(polynomial_pattern, eq.replace(' ', '').lower())
+    matches.pop()
+    matches = [list(group) for group in matches]  # Convert tuple-list to multi dimension list
+
+    for group in matches:
+        group[-1] = group[-1].replace('^', '')
+        if group[0] in ['+', '-']:
+            # Add '1' to x without coefficient
+            group[0] += '1'
+        if group[0] == '':
+            group[0] = '1'
+        if group[1] == '':
+            # Constant
+            group[-1] = '0'
+        elif group[1] == 'x' and group[-1] == '':
+            # Power = 1
+            group[-1] = '1'
+
+    matches.sort(key=lambda tup: tup[-1], reverse=True)
+
+    power = int(matches[0][-1])
+
+    coefficient = [0] * (power + 1)
+
+    for group in matches:
+        coefficient[power - int(group[-1])] = int(group[0])
+
+    return coefficient
