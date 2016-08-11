@@ -3,22 +3,6 @@ Numerical Solutions of Equations
 ================================
 1. Interval Bisection
 2. Newton-Raphson method
-
-Each functions accept an equation, an initial value
-a precision.
-
-Format
------------------------------------------------
-Equation - List (sort in index order DESC.)
-Initial value - Integer
-Precision - Integer (number of decimal points)
-
-Example:
------------------------------------------------
-Eq: 2x^2 + 4x + 3 = 0
-Equation - [2, 4, 3]
-Initial value - 5
-Precision - 10
 """
 
 from mpmath import mpf, fmul, fadd, fsub, power, fneg, fdiv
@@ -28,7 +12,7 @@ mp.prec = 32
 mp.pretty = True
 
 
-def interval_bisection(equation, lower, upper, precision=10):
+def interval_bisection(equation: list, lower: int, upper: int, precision=10) -> str:
     """ Calculate the root of the equation using
     `Interval Bisection` method.
 
@@ -75,7 +59,7 @@ def interval_bisection(equation, lower, upper, precision=10):
     return str(near(alpha, lower, upper)), counter
 
 
-def newton_raphson_method(equation, approx, precision=8):
+def newton_raphson_method(equation: list, approx: int, precision=8) -> str:
     """ Calculate the root of the equation using
     `Newton Raphson` method.
 

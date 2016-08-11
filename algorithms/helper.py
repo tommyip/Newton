@@ -140,6 +140,8 @@ def lexer(eq):
     [2, 0, 0, -5]
     >>> lexer('15x^10')
     [15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    >>> lexer('-6 - x')
+    [-1, -6]
     """
 
     matches = re.findall(polynomial_pattern, eq.replace(' ', '').lower())
@@ -148,11 +150,8 @@ def lexer(eq):
 
     for group in matches:
         group[-1] = group[-1].replace('^', '')
-        if group[0] in ['+', '-']:
-            # Add '1' to x without coefficient
+        if group[0] in ['+', '-'] or group[0] == '':
             group[0] += '1'
-        if group[0] == '':
-            group[0] = '1'
         if group[1] == '':
             # Constant
             group[-1] = '0'

@@ -4,7 +4,7 @@ from matplotlib import style, pyplot as plt
 import numpy as np
 from decimal import Decimal
 
-from algorithms import numerical_method as nm, helper as hp
+from algorithms import numerical_method as nm, numerical_integration as ni, helper as hp
 
 style.use('ggplot')
 ALGORITHMS = [nm.interval_bisection, nm.newton_raphson_method]
@@ -22,18 +22,43 @@ class Window(QtGui.QMainWindow, Ui_MainWindow):
         QtGui.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
+        self.options_showing = []
+
+        self.GithubLabel.setOpenExternalLinks(True)
 
         self.ExecuteButton.clicked.connect(self.execute)
 
     def execute(self):
-        option = self.DifferentiationCombo.currentIndex()
+        option = self.OptionCombo.currentIndex()
         equation = self.EquationEdit.text()
         equation = hp.lexer(equation)
 
         if option == 0:
-            ans, count = nm.interval_bisection(equation, -10, 10, 10)
+            ans, count = nm.interval_bisection(
+                equation,
+                self.LowerInitialLineEdit.text(),
+                self.UpperInitialLineEdit.text(),
+                10
+            )
+            op = 'Root'
+            info = '\nIt took {} iterations to calculate the answer.'.format(count)
         elif option == 1:
-            ans, count = nm.newton_raphson_method(equation, 0, 8)
+            ans, count = nm.newton_raphson_method(
+                equation,
+                self.ApproximateLineEdit.text(),
+                8
+            )
+            op = 'Root'
+            info = '\nIt took {} iterations to calculate the answer.'.format(count)
+        elif option == 2:
+            ans = ni.trapezium_rule(
+                equation,
+                self.LowerBoundLineEdit.text(),
+                self.UpperBoundLineEdit.text(),
+                self.StepLineEdit.text()
+            )
+            op = 'Area'
+            info=''
 
         ans = Decimal(ans)
 
@@ -44,8 +69,8 @@ class Window(QtGui.QMainWindow, Ui_MainWindow):
         plt.axvline(0, color='#696969', linewidth=2)
         plt.axis([int(ans) - 10, int(ans) + 10, -10, 10])
         plt.plot(x, y, '-.b', ans, 0, 'or', markersize=8, linewidth=1.5)
-        plt.title("Equation: {} | Root = {}\nIt took {} iterations to calculate the answer."
-                  .format(equation, ans, count))
+        plt.title("Equation: {eq} | {op} = {answer}{additional}"
+                  .format(eq=equation, op=op, answer=ans, additional=info))
         plt.xlabel("x axis")
         plt.ylabel("y axis")
 
