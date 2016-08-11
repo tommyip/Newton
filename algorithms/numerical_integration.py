@@ -43,4 +43,4 @@ def trapezium_rule(equation: list, lower_bound: int, upper_bound: int, n: int) -
         )
     )
 
-    return str(ans)
+    return str(abs(ans))

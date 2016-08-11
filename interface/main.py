@@ -42,6 +42,7 @@ class Window(QtGui.QMainWindow, Ui_MainWindow):
             )
             op = 'Root'
             info = '\nIt took {} iterations to calculate the answer.'.format(count)
+            point = True
         elif option == 1:
             ans, count = nm.newton_raphson_method(
                 equation,
@@ -50,6 +51,7 @@ class Window(QtGui.QMainWindow, Ui_MainWindow):
             )
             op = 'Root'
             info = '\nIt took {} iterations to calculate the answer.'.format(count)
+            point = True
         elif option == 2:
             ans = ni.trapezium_rule(
                 equation,
@@ -58,7 +60,8 @@ class Window(QtGui.QMainWindow, Ui_MainWindow):
                 self.StepLineEdit.text()
             )
             op = 'Area'
-            info=''
+            info = ''
+            point = False
 
         ans = Decimal(ans)
 
@@ -68,7 +71,9 @@ class Window(QtGui.QMainWindow, Ui_MainWindow):
         plt.axhline(0, color='#696969', linewidth=2)
         plt.axvline(0, color='#696969', linewidth=2)
         plt.axis([int(ans) - 10, int(ans) + 10, -10, 10])
-        plt.plot(x, y, '-.b', ans, 0, 'or', markersize=8, linewidth=1.5)
+        plt.plot(x, y, '-.b', linewidth=1.5)
+        if point:
+            plt.plot(ans, 0, 'or', markersize=8)
         plt.title("Equation: {eq} | {op} = {answer}{additional}"
                   .format(eq=equation, op=op, answer=ans, additional=info))
         plt.xlabel("x axis")

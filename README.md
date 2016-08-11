@@ -1,10 +1,12 @@
-# Newton { Calculus algorithms }
-This repository contains 1.) Differentiation and intergration algorithms written in Python 2.) Simple GUI that can produce graphs base on given equation using [Matplotlib](https://github.com/matplotlib/matplotlib)
+# Newton { Algorithms }
+This repository contains 1.) Differentiation and integration algorithms written in Python 2.) Simple GUI that can produce graphs base on given equation using [Matplotlib](https://github.com/matplotlib/matplotlib)
 
 ## List of algorithms
 
 1. Interval bisection method (root finding)
 2. Newton–Raphson method (root finding)
+3. Trapezium rule (area finding)
+4. Simpson's rule (area finding)
 
 ## Contributing
 
