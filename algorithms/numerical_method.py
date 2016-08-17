@@ -5,26 +5,29 @@ Numerical Solutions of Equations
 2. Newton-Raphson method
 """
 
-from mpmath import mpf, fmul, fadd, fsub, power, fneg, fdiv
+from mpmath import mpf, fadd, fsub, fmul, fdiv, power
 from .helper import *
 
 mp.prec = 32
 mp.pretty = True
 
 
-def interval_bisection(equation: list, lower: int, upper: int, precision=10) -> str:
+def interval_bisection(equation, lower, upper) -> str:
     """ Calculate the root of the equation using
     `Interval Bisection` method.
 
     Examples:
-    >>> interval_bisection([1, 0, -3, -4], 2, 3, 10)[0]
+    >>> interval_bisection([1, 0, -3, -4], 2, 3)[0]
     '2.19582335'
-    >>> interval_bisection([1, 0, 1, -6], 1, 2, 10)[0]
+    >>> interval_bisection([1, 0, 1, -6], 1, 2)[0]
     '1.63436529'
-    >>> interval_bisection([1, 0, 3, -12], 1, 2, 10)[0]
+    >>> interval_bisection([1, 0, 3, -12], 1, 2)[0]
     '1.85888907'
     """
+
+    # Counts the number of iteration
     counter = 0
+
     equation = mpfiy(equation)
     lower, upper = mpf(lower), mpf(upper)
     index_length = len(equation)
@@ -33,9 +36,10 @@ def interval_bisection(equation: list, lower: int, upper: int, precision=10) -> 
     previous_alpha = alpha = None
     delta = fsub(upper, lower)
 
-    while delta > power(10, fneg(precision)) or previous_alpha is None:
+    while delta > power(10, -10) or previous_alpha is None:
         ans = mpf(0)
 
+        # Summing the answer
         for i in range(index_length):
             index_power = index_length - i - 1
             ans = fadd(ans, fmul(equation[i], power(x, index_power)))
@@ -52,34 +56,34 @@ def interval_bisection(equation: list, lower: int, upper: int, precision=10) -> 
             continue
         elif previous_alpha == alpha:
             break
-        else:
-            delta = abs(fsub(alpha, previous_alpha))
-            counter += 1
+
+        delta = abs(fsub(alpha, previous_alpha))
+        counter += 1
 
     return str(near(alpha, lower, upper)), counter
 
 
-def newton_raphson_method(equation: list, approx: int, precision=8) -> str:
+def newton_raphson_method(equation, approx) -> str:
     """ Calculate the root of the equation using
     `Newton Raphson` method.
 
     Examples:
-    >>> newton_raphson_method([1, 0, -3, -4], 2, 8)[0]
+    >>> newton_raphson_method([1, 0, -3, -4], 2)[0]
     '2.19582335'
-    >>> newton_raphson_method([1, 0, 1, -6], 1, 8)[0]
+    >>> newton_raphson_method([1, 0, 1, -6], 1)[0]
     '1.63436529'
-    >>> newton_raphson_method([1, 0, 3, -12], 1, 8)[0]
+    >>> newton_raphson_method([1, 0, 3, -12], 1)[0]
     '1.85888907'
     """
+
+    # Counts the number of iteration
     counter = 0
+
     equation = mpfiy(equation)
-    approx = mpf(approx)
-
-    previous_approx = None
+    approx, previous_approx = mpf(approx), None
     delta = 100
-    delta_required = power(10, fneg(precision))
 
-    while delta > delta_required or previous_approx is None:
+    while delta > power(10, -8) or previous_approx is None:
         better_approx = fsub(approx, fdiv(
             func(equation, approx),
             func(differentiate(equation), approx)
@@ -91,8 +95,8 @@ def newton_raphson_method(equation: list, approx: int, precision=8) -> str:
             continue
         elif previous_approx == approx:
             break
-        else:
-            delta = abs(fsub(approx, previous_approx))
-            counter += 1
+
+        delta = abs(fsub(approx, previous_approx))
+        counter += 1
 
     return str(approx), counter
