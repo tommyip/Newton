@@ -1,8 +1,8 @@
 import sys
-import numpy as np
 from decimal import Decimal
 
-from PyQt4 import QtCore, QtGui, uic
+import numpy as np
+from PyQt4 import QtGui, uic
 from matplotlib import style, pyplot as plt
 
 from algorithms import \
@@ -21,6 +21,8 @@ class Window(QtGui.QMainWindow, Ui_MainWindow):
     the data produce from the set of algorithm located in
     ../algorithms
     """
+
+    PLOTTING_PRECISION = 0.01
 
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
@@ -50,16 +52,16 @@ class Window(QtGui.QMainWindow, Ui_MainWindow):
                 self.UpperInitialLineEdit.text(),
             )
             operation = 'Root'
-            info = '\nIt took {} iterations to calculate the answer.'.format(count)
+            info = 'It took {} iterations to calculate the answer.'.format(count)
 
         # (Root) Newton raphson method
         elif option == 1:
             ans, count = nm.newton_raphson_method(
                 equation,
-                self.ApproximateLineEdit.text(),
+                str(self.ApproximateLineEdit.text()),
             )
             operation = 'Root'
-            info = '\nIt took {} iterations to calculate the answer.'.format(count)
+            info = 'It took {} iterations to calculate the answer.'.format(count)
 
         # (Area) Trapezium rule
         elif option == 2:
@@ -70,40 +72,46 @@ class Window(QtGui.QMainWindow, Ui_MainWindow):
                 self.StepLineEdit.text()
             )
             operation = 'Area'
-            info = '\n between x: {} and {}'.format(self.LowerBoundLineEdit.text(), self.UpperBoundLineEdit.text())
+            info = 'between x: {} and {}'.format(self.LowerBoundLineEdit.text(), self.UpperBoundLineEdit.text())
 
         # (Area) Simpson's rule
-        elif option == 3:
+        elif self.option == 3:
             pass
 
-        ans = Decimal(ans)
+        self.plot(option, equation, Decimal(ans), operation, info)
 
-        x = np.arange(int(ans)-10, int(ans)+10, 0.01)
+    @staticmethod
+    def plot(option, equation, answer, operation, info):
+        if option in [0, 1]:
+            lower_bound, upper_bound = answer - 10, answer + 10
+        elif option in [2, 3]:
+            lower_bound, upper_bound = -10, 10
+
+        lower_bound = np.int64(lower_bound)
+        upper_bound = np.int64(upper_bound)
+
+        x = np.arange(lower_bound, upper_bound, Window.PLOTTING_PRECISION)
         y = list(map(lambda i: hp.func(equation, i), x))
 
+        # Plot axis line
         plt.axhline(0, color='#696969', linewidth=2)
         plt.axvline(0, color='#696969', linewidth=2)
-        plt.axis([int(ans) - 10, int(ans) + 10, -10, 10])
+
+        # Plot user curve
+        plt.axis([lower_bound, upper_bound, -10, 10])
         plt.plot(x, y, '-.b', linewidth=1.5)
+
         if operation == 'Root':
-            plt.plot(ans, 0, 'or', markersize=8)
+            # Plot point of root
+            plt.plot(answer, 0, 'or', markersize=8)
         elif operation == 'Area':
-            # plt.plot(self.LowerBoundLineEdit.text(), np.ndarray(-10, 10))
-            """
-            plt.fill_between(np.arange(
-                np.float32(self.LowerBoundLineEdit.text()),
-                np.float32(self.UpperBoundLineEdit.text())),
-                y, color='red')
-            """
-        plt.title("Equation: {eq} | {op} = {answer}{additional}"
-                  .format(eq=equation, op=operation, answer=ans, additional=info))
+            pass
+        plt.title("Equation: {eq} | {op} = {answer}\n{additional}"
+                  .format(eq=equation, op=operation, answer=answer, additional=info))
         plt.xlabel("x axis")
         plt.ylabel("y axis")
 
         plt.show()
-
-    def plot(self):
-        pass
 
 
 def main():
